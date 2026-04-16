@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Completed</title>
+    <link rel="stylesheet" href="score-page.css">
+</head>
+<body>
+    <div class="logo-container">
+        <img src="image2.png" alt="GEOMITRA Logo">
+    </div>
+
+    <main class="result-shell">
+        <section class="result-card">
+            <h2 id="resultTitle">Quiz Completed</h2>
+            <p id="resultMessage">Thank you for participating.</p>
+
+            <div class="result-stats">
+                <article class="stat-card">
+                    <span class="stat-label">Score</span>
+                    <strong id="resultScore">0 / 0</strong>
+                    <small>Answered questions</small>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-label">Time Spent</span>
+                    <strong id="resultTime">00:00:00</strong>
+                    <small>From quiz start until result</small>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-label">Status</span>
+                    <strong id="resultStatus">Completed</strong>
+                    <small id="resultTimestamp">Result recorded just now</small>
+                </article>
+            </div>
+
+            <section id="resumeSection" class="resume-card" hidden>
+                <h3>Resume Disqualified Quiz</h3>
+                <p id="resumeHelpText">Only the admin can approve a resume after disqualification.</p>
+                <p id="resumeError" class="resume-error"></p>
+                <button id="resumeQuizButton" type="button">Refresh Approval Status</button>
+            </section>
+
+            <div class="result-actions">
+                <button id="backButton" class="back" type="button">Back to Dashboard</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="score.js"></script>
+</body>
+</html>

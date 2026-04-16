@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function siteConfigExists() {
+      return exists(/databases/$(database)/documents/site/config);
+    }
+
+    function isOwner() {
+      return signedIn()
+        && siteConfigExists()
+        && get(/databases/$(database)/documents/site/config).data.ownerUid == request.auth.uid;
+    }
+
+    function isUserUpdatingOnlyQuizState(userId) {
+      return isSelf(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['quizState']);
+    }
+
+    match /site/config {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isOwner() && request.resource.data.ownerUid == resource.data.ownerUid;
+      allow delete: if isOwner();
+    }
+
+    match /users/{userId} {
+      allow create: if isSelf(userId);
+      allow read: if isSelf(userId) || isOwner();
+      allow update: if isOwner() || isUserUpdatingOnlyQuizState(userId);
+      allow delete: if isOwner();
+
+      match /teams/{teamId} {
+        allow create, read, update, delete: if signedIn() && (request.auth.uid == userId || isOwner());
+      }
+    }
+  }
+}
